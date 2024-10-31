@@ -11,7 +11,6 @@ import com.moharoon.model.User;
 import com.moharoon.service.UserService;
 
 @RestController
-@RequestMapping("/api/users")
 public class UserController {
 	
 	
@@ -22,6 +21,13 @@ public class UserController {
 	@PostMapping("/register")
 	public ResponseEntity<User> registerUser(@RequestBody User user) {
 		return ResponseEntity.ok(userService.registerUser(user));
+	}
+	
+	
+	@PostMapping("/login")
+	public ResponseEntity<String> loginUser(@RequestBody User user) {
+		System.out.println("coming to login controller....................");
+		return ResponseEntity.ok(userService.verify(user));
 	}
 
 }
