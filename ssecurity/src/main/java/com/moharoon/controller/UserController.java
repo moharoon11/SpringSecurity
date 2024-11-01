@@ -20,6 +20,7 @@ public class UserController {
 	
 	@PostMapping("/register")
 	public ResponseEntity<User> registerUser(@RequestBody User user) {
+		System.out.println("Reaching the register controller.....");
 		return ResponseEntity.ok(userService.registerUser(user));
 	}
 	

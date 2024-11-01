@@ -18,6 +18,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.moharoon.filter.JwtFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -31,9 +34,12 @@ public class SecurityConfig {
 
 	
 	
+	@Autowired
+	private JwtFilter jwtFilter;
+	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		System.out.println("Configuring Security Filter Chain.....................");
+		
 		return http.csrf(customizer -> customizer.disable())
 		    .authorizeHttpRequests(request -> request
 		    		                                 .requestMatchers("register", "login")
@@ -42,6 +48,7 @@ public class SecurityConfig {
 		    		                                 .authenticated())
 		    .httpBasic(Customizer.withDefaults())
 		    .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+		    .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 		    .build();    
 	}
 	
@@ -68,18 +75,17 @@ public class SecurityConfig {
 	@Bean
 	public AuthenticationProvider authProvider() {
 		
-		System.out.println("COming into authenticatoin provider.....................");
+		
 		DaoAuthenticationProvider daoAuthProvider  = new DaoAuthenticationProvider();
 		daoAuthProvider.setPasswordEncoder(new BCryptPasswordEncoder(12));
 		daoAuthProvider.setUserDetailsService(userDetailsService);
-		System.out.println("returning the athenticatoin provider dao auth provider.........................");
+		
 		return daoAuthProvider;
 	}
 	
 	
 	@Bean
 	public AuthenticationManager authManager(AuthenticationConfiguration config) throws Exception {
-		System.out.println("Creting authentication manager object.....................");
 		return config.getAuthenticationManager();	
 	}
 	

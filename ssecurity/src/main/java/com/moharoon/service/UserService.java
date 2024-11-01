@@ -20,6 +20,9 @@ public class UserService {
 	@Autowired
 	private AuthenticationManager authManager;
 	
+	@Autowired
+	private JwtService jwtService;
+	
 	
 	BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 	
@@ -33,20 +36,19 @@ public class UserService {
 	public String verify(User user) {
 		
 		
-		System.out.println("coming to login verify method..........................");
+		
 		
 		Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 		
-		System.out.println("getting authenticated in verify method");
+		
 		
 		if(authentication.isAuthenticated()) {
-			System.out.println("user authenticated in verify method....................");
-			return "Success";
+			
+			return jwtService.generateToken(user.getUsername());
 		}
 			
 		
 		
-		System.out.println("Autheication fails,,,,,,,,,,,,in verify mmethod.................");
 		
 		return "Fails";
 	}

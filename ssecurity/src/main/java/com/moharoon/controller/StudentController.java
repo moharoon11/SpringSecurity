@@ -26,8 +26,8 @@ public class StudentController {
 	
 	
 	@GetMapping("/get")
-	public ResponseEntity<List<Student>> getStudents() {
-		return ResponseEntity.ok(students);
+	public List<Student> getStudents() {
+		return students;
 	}
 	
 	
